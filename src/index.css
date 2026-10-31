@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-ivory: #F2F0E8;
+    --text-black: #111111;
+    --electric-blue: #304FFE;
+    --acid-lime: #D7FF36;
+    --signal-orange: #FF5733;
+  }
+
+  body {
+    background-color: var(--bg-ivory);
+    color: var(--text-black);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-archivo {
+    font-family: 'Archivo Black', sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  .font-grotesk {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .font-mono-tech {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+}
+
+/* Neo-Brutalist & Swiss Graphic Rules */
+.brutalist-border {
+  border: 1px solid #111111;
+}
+
+.brutalist-border-thick {
+  border: 2px solid #111111;
+}
+
+.brutalist-shadow {
+  box-shadow: 4px 4px 0px #111111;
+}
+
+.brutalist-shadow-sm {
+  box-shadow: 2px 2px 0px #111111;
+}
+
+.brutalist-shadow-lg {
+  box-shadow: 8px 8px 0px #111111;
+}
+
+.brutalist-shadow-blue {
+  box-shadow: 4px 4px 0px #304FFE;
+}
+
+.brutalist-shadow-lime {
+  box-shadow: 4px 4px 0px #D7FF36;
+}
+
+.brutalist-shadow-orange {
+  box-shadow: 4px 4px 0px #FF5733;
+}
+
+/* Subtle editorial paper grain texture */
+.paper-grain {
+  background-image: radial-gradient(rgba(17, 17, 17, 0.04) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Custom marquee animations */
+@keyframes marqueeLeft {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeft 28s linear infinite;
+}
+
+.animate-marquee-left:hover {
+  animation-play-state: paused;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marqueeRight 28s linear infinite;
+}
+
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 20s linear infinite;
+}
+
+/* Tech marquee rows — variable speeds */
+@keyframes marqueeLeftFast {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes marqueeRightFast {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+.animate-tech-row-left {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeftFast 22s linear infinite;
+}
+.animate-tech-row-left:hover {
+  animation-play-state: paused;
+}
+.animate-tech-row-right {
+  display: flex;
+  width: max-content;
+  animation: marqueeRightFast 26s linear infinite;
+}
+.animate-tech-row-right:hover {
+  animation-play-state: paused;
+}
+.animate-tech-row-left-slow {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeftFast 32s linear infinite;
+}
+.animate-tech-row-left-slow:hover {
+  animation-play-state: paused;
+}
+
+/* Print Styles for formatted resume export */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
