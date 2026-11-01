@@ -364,9 +364,10 @@ export default function TransmissionScrollBanner() {
             />
 
             {/* Label inside track */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <span className="text-[8px] font-mono-tech font-black text-black/90 uppercase tracking-widest drop-shadow-sm group-hover:text-white transition-colors">
-                SCRUB TO TRANSMISSION // CARRIER ACTIVE: {activeChannel.name}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-2 overflow-hidden">
+              <span className="text-[8px] font-mono-tech font-black text-black/90 uppercase tracking-widest drop-shadow-sm group-hover:text-white transition-colors truncate">
+                <span className="hidden sm:inline">SCRUB TO TRANSMISSION // </span>
+                <span>CARRIER ACTIVE: {activeChannel.name}</span>
               </span>
             </div>
           </div>

@@ -156,31 +156,31 @@ export default function Projects({ onSelectProject }: ProjectsProps) {
             </div>
 
             {/* Compact Segmented Switcher for Page 1 vs Page 2 */}
-            <div className="flex items-center border-2 border-[#111111] bg-[#F2F0E8] p-1 gap-1 self-start md:self-auto">
+            <div className="grid grid-cols-2 sm:flex items-center border-2 border-[#111111] bg-[#F2F0E8] p-1 gap-1 w-full md:w-auto">
               <button
                 type="button"
                 onClick={() => switchPage(1)}
-                className={`flex items-center gap-2 px-3 py-1.5 text-xs font-mono-tech font-bold uppercase transition-all ${
+                className={`flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-mono-tech font-bold uppercase transition-all ${
                   activePage === 1
                     ? 'bg-[#111111] text-[#D7FF36] brutalist-shadow-sm'
                     : 'text-[#111111] hover:bg-neutral-200'
                 }`}
               >
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span>PAGE 01: PROD APPS (4)</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                <span className="truncate">PAGE 01: PROD (4)</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => switchPage(2)}
-                className={`flex items-center gap-2 px-3 py-1.5 text-xs font-mono-tech font-bold uppercase transition-all ${
+                className={`flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-mono-tech font-bold uppercase transition-all ${
                   activePage === 2
                     ? 'bg-[#111111] text-[#D7FF36] brutalist-shadow-sm'
                     : 'text-[#111111] hover:bg-neutral-200'
                 }`}
               >
-                <Github className="w-3.5 h-3.5" />
-                <span>PAGE 02: RESEARCH (5)</span>
+                <Github className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">PAGE 02: LABS (5)</span>
               </button>
             </div>
           </div>
@@ -209,7 +209,7 @@ export default function Projects({ onSelectProject }: ProjectsProps) {
             </div>
 
             {/* Category Filter Chips */}
-            <div className="flex flex-wrap items-center gap-1">
+            <div className="flex items-center gap-1 overflow-x-auto max-w-full pb-0.5">
               {categories.map((cat) => (
                 <button
                   key={cat}
@@ -218,7 +218,7 @@ export default function Projects({ onSelectProject }: ProjectsProps) {
                     sound.playClick();
                     setSelectedCategory(cat);
                   }}
-                  className={`px-2 py-1 text-[11px] font-mono-tech font-bold uppercase border transition-colors ${
+                  className={`px-2 py-1 text-[10px] sm:text-[11px] font-mono-tech font-bold uppercase border transition-colors whitespace-nowrap shrink-0 ${
                     selectedCategory === cat
                       ? 'bg-[#304FFE] text-white border-[#304FFE]'
                       : 'bg-white text-neutral-700 border-neutral-300 hover:border-black'

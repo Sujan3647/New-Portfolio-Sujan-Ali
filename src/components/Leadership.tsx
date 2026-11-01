@@ -176,12 +176,12 @@ export default function Leadership() {
           </div>
 
           {/* Controls: Auto-Motion Toggle + View Mode Toggle */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
             {/* Auto Motion Pulse Button */}
             <button
               type="button"
               onClick={toggleAutoMotion}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono-tech font-bold uppercase transition-all border ${
+              className={`flex items-center justify-center gap-1.5 px-3 py-1.5 text-[11px] sm:text-xs font-mono-tech font-bold uppercase transition-all border ${
                 autoMotion
                   ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
                   : 'bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-white'
@@ -193,14 +193,14 @@ export default function Leadership() {
             </button>
 
             {/* Mode Switcher: 3D Grid vs 3D Cockpit */}
-            <div className="flex items-center gap-1 bg-neutral-900 p-1 border border-neutral-800 text-xs font-mono-tech">
+            <div className="grid grid-cols-2 sm:flex items-center gap-1 bg-neutral-900 p-1 border border-neutral-800 text-xs font-mono-tech">
               <button
                 type="button"
                 onClick={() => {
                   sound.playClick();
                   setViewMode('3d-grid');
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1 font-bold uppercase transition-all ${
+                className={`flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-1 text-[11px] font-bold uppercase transition-all ${
                   viewMode === '3d-grid'
                     ? 'bg-white text-black'
                     : 'text-neutral-400 hover:text-white'
@@ -216,7 +216,7 @@ export default function Leadership() {
                   sound.playClick();
                   setViewMode('3d-cockpit');
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1 font-bold uppercase transition-all ${
+                className={`flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-1 text-[11px] font-bold uppercase transition-all ${
                   viewMode === '3d-cockpit'
                     ? 'bg-white text-black'
                     : 'text-neutral-400 hover:text-white'

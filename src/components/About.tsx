@@ -476,16 +476,16 @@ export default function About({ onOpenResume }: AboutProps) {
                   </span>
                 </div>
 
-                <div className="p-2.5 text-[11px] leading-relaxed space-y-1 bg-black/70">
-                  <div className="flex items-center gap-2 text-neutral-200">
-                    <span className="text-[#D7FF36] font-bold select-none">$</span>
-                    <span className="text-neutral-100">
+                <div className="p-2.5 text-[11px] leading-relaxed space-y-1 bg-black/70 overflow-x-auto">
+                  <div className="flex items-start gap-2 text-neutral-200">
+                    <span className="text-[#D7FF36] font-bold select-none shrink-0">$</span>
+                    <span className="text-neutral-100 break-all">
                       {typedCmd}
                       <span className="inline-block w-1.5 h-3.5 bg-[#D7FF36] ml-0.5 animate-pulse align-middle" />
                     </span>
                   </div>
                   {showOutput && (
-                    <div className="text-[10px] text-emerald-400 pl-4 animate-fadeIn">
+                    <div className="text-[10px] text-emerald-400 pl-4 animate-fadeIn break-words">
                       {DOMAIN_DEV_SCRIPTS[activePillarIndex].output}
                     </div>
                   )}

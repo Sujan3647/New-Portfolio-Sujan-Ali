@@ -31,7 +31,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2F0E8] text-[#111111] flex flex-col relative selection:bg-[#D7FF36] selection:text-[#111111]">
+    <div className="min-h-screen bg-[#F2F0E8] text-[#111111] flex flex-col relative selection:bg-[#D7FF36] selection:text-[#111111] overflow-x-hidden">
       {/* Custom Precision Cursor */}
       <CustomCursor />
 
@@ -42,7 +42,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full flex flex-col">
+      <main className="flex-1 w-full flex flex-col overflow-x-hidden">
         {/* 1. Hero: Experimental Magazine Cover */}
         <Hero onOpenResume={() => setIsResumeOpen(true)} />
 

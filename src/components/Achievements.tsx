@@ -214,9 +214,9 @@ export default function Achievements() {
           </div>
 
           {/* Right Action: Category Filter + Confetti Cannon */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2 w-full md:w-auto">
             {/* Filter Pills */}
-            <div className="flex items-center gap-1 bg-neutral-900 p-1 border border-neutral-800">
+            <div className="flex items-center gap-1 bg-neutral-900 p-1 border border-neutral-800 overflow-x-auto max-w-full">
               {categories.map((cat) => (
                 <button
                   key={cat}
@@ -225,7 +225,7 @@ export default function Achievements() {
                     sound.playClick();
                     setActiveFilter(cat);
                   }}
-                  className={`px-2.5 py-1 text-[11px] font-mono-tech font-bold uppercase transition-all ${
+                  className={`px-2 py-1 text-[10px] sm:text-[11px] font-mono-tech font-bold uppercase transition-all whitespace-nowrap shrink-0 ${
                     activeFilter === cat
                       ? 'bg-white text-black'
                       : 'text-neutral-400 hover:text-white'
@@ -240,14 +240,14 @@ export default function Achievements() {
             <button
               type="button"
               onClick={() => launchCelebration('global')}
-              className={`px-3 py-1.5 border font-mono-tech text-xs font-bold uppercase transition-all flex items-center gap-1.5 ${
+              className={`px-2.5 sm:px-3 py-1.5 border font-mono-tech text-[11px] sm:text-xs font-bold uppercase transition-all flex items-center gap-1.5 shrink-0 ${
                 celebrating
                   ? 'bg-[#D7FF36] text-black border-[#D7FF36] scale-105'
                   : 'bg-neutral-900 text-white border-neutral-700 hover:border-[#D7FF36] hover:text-[#D7FF36]'
               }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-[#D7FF36]" />
-              <span className="hidden sm:inline">{celebrating ? 'CONGRATS! 🎉' : 'CELEBRATE WINS'}</span>
+              <span>{celebrating ? '🎉 WIN!' : 'CELEBRATE'}</span>
             </button>
           </div>
         </div>
