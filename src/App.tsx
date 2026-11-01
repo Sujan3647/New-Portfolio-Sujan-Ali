@@ -6,9 +6,11 @@ import CrossMarquee from './components/CrossMarquee';
 import About from './components/About';
 import TechMap from './components/TechMap';
 import Projects from './components/Projects';
+import ProjectsScrollBanner from './components/ProjectsScrollBanner';
 import Experience from './components/Experience';
 import Achievements from './components/Achievements';
 import Leadership from './components/Leadership';
+import TransmissionScrollBanner from './components/TransmissionScrollBanner';
 import Contact from './components/Contact';
 import ProjectModal from './components/ProjectModal';
 import ResumeModal from './components/ResumeModal';
@@ -109,19 +111,8 @@ export default function App() {
         {/* 4. Tech Stack: Tools of My Trade (Then Tech) */}
         <TechMap />
 
-        {/* Inverted Accent Ticker */}
-        <MarqueeBanner
-          items={[
-            'CAREPULSE HEALTHCARE',
-            'AES-256 ENCRYPTION PLATFORM',
-            'SOLIDITY LOTTERY PROTOCOL',
-            'REAL-TIME ANTI-CHEATING SENTINEL',
-            'PROVABLY SECURE',
-            'HIGH CONCURRENCY ARCHITECTURE',
-          ]}
-          theme="lime"
-          direction="right"
-        />
+        {/* High-Impact Dynamic Project Stream & Telemetry Marquee */}
+        <ProjectsScrollBanner />
 
         {/* 5. Selected Work: Project Archive (Then Projects) */}
         <Projects onSelectProject={(project) => setActiveProject(project)} />
@@ -132,17 +123,8 @@ export default function App() {
         {/* 7. Leadership & Community */}
         <Leadership />
 
-        {/* Blue Accent Ticker */}
-        <MarqueeBanner
-          items={[
-            'OPEN FOR ARCHITECTURAL CONSULTING',
-            'FULL STACK ENGINEERING SPRINT',
-            'STARTUP TECHNOLOGY ADVISORY',
-            'TRIPURA / INDIA · AVAILABLE GLOBALLY',
-          ]}
-          theme="blue"
-          direction="left"
-        />
+        {/* High-Voltage Transmission Scroll Banner Before Contact */}
+        <TransmissionScrollBanner />
 
         {/* 8. Contact: The Next Collaboration */}
         <Contact onOpenResume={() => setIsResumeOpen(true)} />

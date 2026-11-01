@@ -48,10 +48,14 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         <div className="bg-[#111111] text-[#F2F0E8] px-6 py-4 flex items-center justify-between border-b border-[#111111]">
           <div className="flex items-center gap-3">
             <span className="font-archivo text-[#D7FF36] text-xl font-bold">
-              PROJECT {project.number}
+              PROJECT // {project.number}
             </span>
-            <span className="text-neutral-400 font-mono-tech text-xs hidden sm:inline">
-              // ARCHITECTURAL SPECIFICATION
+            <span className="px-2 py-0.5 bg-[#304FFE] text-white text-[10px] font-mono-tech font-bold uppercase tracking-wider">
+              {project.badge || project.category}
+            </span>
+            <span className="text-emerald-400 font-mono-tech text-xs hidden sm:inline-flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              {project.status || 'DEPLOYED'}
             </span>
           </div>
           <button
@@ -72,43 +76,71 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           {/* Hero Section of the Modal */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
             <div className="md:col-span-8 space-y-2">
-              <span className="text-xs font-mono-tech font-bold uppercase tracking-wider text-[#304FFE]">
-                {project.category} · {project.year}
-              </span>
+              <div className="flex flex-wrap items-center gap-2 text-xs font-mono-tech font-bold uppercase tracking-wider text-[#304FFE]">
+                <span>{project.category}</span>
+                <span>·</span>
+                <span>{project.year}</span>
+                {project.branch && (
+                  <>
+                    <span>·</span>
+                    <span className="text-neutral-600">BRANCH: {project.branch}</span>
+                  </>
+                )}
+              </div>
               <h3 className="text-3xl sm:text-4xl font-archivo text-[#111111] uppercase tracking-tight">
                 {project.title}
               </h3>
               <p className="text-base font-medium text-neutral-800">
                 {project.tagline}
               </p>
+              {project.domain && (
+                <div className="pt-1 flex items-center gap-2 text-xs font-mono-tech text-neutral-600">
+                  <span className="font-semibold text-[#111111]">HOST / REPO:</span>
+                  <code className="px-2 py-0.5 bg-white border border-[#111111] text-[#304FFE] font-bold">
+                    {project.domain}
+                  </code>
+                </div>
+              )}
             </div>
 
             <div className="md:col-span-4 flex flex-col gap-2.5">
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => sound.playClick()}
-                className="w-full py-2.5 px-4 bg-[#111111] text-white hover:bg-[#304FFE] border border-[#111111] font-mono-tech text-xs font-bold uppercase transition-colors flex items-center justify-center gap-2 brutalist-shadow-sm"
-              >
-                <Github className="w-4 h-4" />
-                <span>GITHUB REPO</span>
-              </a>
-
               {project.liveUrl && (
                 <a
                   href={project.liveUrl}
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => sound.playClick()}
-                  className="w-full py-2.5 px-4 bg-white text-[#111111] hover:bg-[#D7FF36] border border-[#111111] font-mono-tech text-xs font-bold uppercase transition-colors flex items-center justify-center gap-2 brutalist-shadow-sm"
+                  className="w-full py-2.5 px-4 bg-[#111111] text-white hover:bg-[#304FFE] border border-[#111111] font-mono-tech text-xs font-bold uppercase transition-colors flex items-center justify-center gap-2 brutalist-shadow-sm"
                 >
-                  <ExternalLink className="w-4 h-4 text-[#304FFE]" />
-                  <span>VIEW LIVE ARCHIVE</span>
+                  <ExternalLink className="w-4 h-4 text-[#D7FF36]" />
+                  <span>VISIT LIVE ARCHIVE</span>
                 </a>
               )}
+
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => sound.playClick()}
+                className="w-full py-2.5 px-4 bg-white text-[#111111] hover:bg-[#D7FF36] border border-[#111111] font-mono-tech text-xs font-bold uppercase transition-colors flex items-center justify-center gap-2 brutalist-shadow-sm"
+              >
+                <Github className="w-4 h-4" />
+                <span>GITHUB REPOSITORY</span>
+              </a>
             </div>
           </div>
+
+          {/* Metrics bar if available */}
+          {project.metrics && project.metrics.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 border-2 border-[#111111] bg-white p-3 brutalist-shadow-sm">
+              {project.metrics.map((met, i) => (
+                <div key={i} className="p-2 border border-neutral-200 bg-[#F2F0E8]/50">
+                  <div className="text-[10px] font-mono-tech text-neutral-500 uppercase">{met.label}</div>
+                  <div className="text-sm font-archivo text-[#111111] uppercase tracking-tight">{met.value}</div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Project High-Res Preview */}
           <div className="border-2 border-[#111111] overflow-hidden bg-[#111111] relative group">

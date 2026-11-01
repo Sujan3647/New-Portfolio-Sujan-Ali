@@ -158,7 +158,7 @@ export default function CommandMenu({ isOpen, onClose, onSelectProjectById }: Co
             <div className="p-6 text-xs font-mono-tech text-neutral-600 space-y-3">
               <div className="font-bold text-[#111111] uppercase">QUICK SUGGESTIONS:</div>
               <div className="flex flex-wrap gap-2">
-                {['CarePulse', 'FICCI', 'Docker', 'Solidity', '₹95,286 Cr', 'Spring Boot'].map((tag) => (
+                {['TechNOVATE', 'SIC', 'CouponPe', 'Quantum', 'FICCI', 'Docker', 'Solidity', 'Spring Boot'].map((tag) => (
                   <button
                     key={tag}
                     type="button"

@@ -1,12 +1,20 @@
 import { useState } from 'react';
-import { Mail, Github, Linkedin, Copy, Check, Send, Download, FileText, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Mail, Github, Linkedin, Copy, Check, Send, ArrowUpRight, Zap, Globe, Terminal, Sparkles, RefreshCw } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
-import { validateContactForm, generateVCardString } from '../utils/portfolioLogic';
+import { validateContactForm } from '../utils/portfolioLogic';
 import { sound } from '../utils/sound';
 
 interface ContactProps {
-  onOpenResume: () => void;
+  onOpenResume?: () => void;
 }
+
+const ENGAGEMENT_PRESETS = [
+  { label: 'Full Stack Sprint', tag: 'SPRINT', desc: 'React, Node, Distributed APIs' },
+  { label: 'System Architecture', tag: 'ARCH', desc: 'High-Concurrency & Cloud Infra' },
+  { label: 'Startup Advisory', tag: 'ADVISE', desc: 'Tech Audits, MVP & Strategy' },
+  { label: 'Cyber / Cryptography', tag: 'CRYPTO', desc: 'Post-Quantum & Security R&D' }
+];
 
 export default function Contact({ onOpenResume }: ContactProps) {
   const [formData, setFormData] = useState({
@@ -19,6 +27,7 @@ export default function Contact({ onOpenResume }: ContactProps) {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [isHoveredSubmit, setIsHoveredSubmit] = useState(false);
 
   const handleCopyEmail = () => {
     sound.playPop();
@@ -27,17 +36,12 @@ export default function Contact({ onOpenResume }: ContactProps) {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const handleDownloadVCard = () => {
-    sound.playPop();
-    const vCardContent = generateVCardString(PORTFOLIO_DATA.profile);
-    const blob = new Blob([vCardContent], { type: 'text/vcard;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'Sujan_Ali.vcf');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handlePresetClick = (presetLabel: string) => {
+    sound.playClick();
+    setFormData((prev) => ({
+      ...prev,
+      subject: `[${presetLabel}] Inquiry`,
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,11 +51,24 @@ export default function Contact({ onOpenResume }: ContactProps) {
     const validation = validateContactForm(formData);
     if (!validation.isValid) {
       setFormErrors(validation.errors);
+      sound.playBeep(320, 0.08, 0.08);
       return;
     }
 
     setFormErrors({});
     setSubmitted(true);
+    sound.playBeep(880, 0.1, 0.08);
+
+    try {
+      confetti({
+        particleCount: 45,
+        spread: 60,
+        origin: { y: 0.8 },
+        colors: ['#D7FF36', '#304FFE', '#ffffff', '#FF5733']
+      });
+    } catch {
+      // safe fallback
+    }
 
     // Save in local storage inquiry log
     try {
@@ -64,120 +81,139 @@ export default function Contact({ onOpenResume }: ContactProps) {
   };
 
   return (
-    <section id="contact" className="w-full bg-[#111111] text-[#F2F0E8] py-20 md:py-32 relative paper-grain border-b border-[#111111]">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
-        {/* Top Editorial Ribbon */}
-        <div className="flex items-center justify-between border-b border-neutral-800 pb-4 mb-12 text-xs font-mono-tech text-neutral-400">
-          <div className="flex items-center gap-2">
+    <section id="contact" className="w-full bg-[#09090C] text-[#F2F0E8] py-12 md:py-16 relative paper-grain border-b border-[#111111]">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        
+        {/* Compact Terminal Top Header */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-800 pb-3 mb-8 text-xs font-mono-tech">
+          <div className="flex items-center gap-2.5">
             <span className="w-2.5 h-2.5 bg-[#D7FF36] inline-block animate-pulse" />
-            <span className="uppercase text-white font-bold tracking-wider">
+            <span className="text-white font-black tracking-wider uppercase">
               SECTION 07 // TRANSMISSION INITIATION
             </span>
+            <span className="hidden sm:inline text-neutral-600">|</span>
+            <span className="hidden sm:inline text-emerald-400 font-semibold text-[11px]">
+              ● ENCRYPTION: TLS 1.3 / VERIFIED
+            </span>
           </div>
-          <div className="text-[11px] uppercase tracking-widest hidden sm:block">
-            {PORTFOLIO_DATA.profile.timezone}
+
+          <div className="flex items-center gap-3 text-neutral-400 text-[11px]">
+            <span className="flex items-center gap-1">
+              <Globe className="w-3 h-3 text-[#D7FF36]" />
+              <span>{PORTFOLIO_DATA.profile.timezone}</span>
+            </span>
+            <span className="text-neutral-700">·</span>
+            <span className="text-neutral-300">SLA: &lt; 24H</span>
           </div>
         </div>
 
-        {/* Dramatic Headline & Form Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Dramatic Typography & Coordinates */}
-          <div className="lg:col-span-6 space-y-8">
-            <div className="space-y-2">
-              <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-archivo text-white leading-[0.9] tracking-tighter uppercase select-none">
-                <span className="block">LET'S MAKE</span>
-                <span className="block text-[#D7FF36]">SOMETHING</span>
-                <span className="block">THAT MATTERS<span className="text-[#304FFE]">.</span></span>
+        {/* Compact Two-Column Uplink Cockpit */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          {/* Left Column: Direct Coordinates, Presets & Profiles (Compact Card) */}
+          <div className="lg:col-span-5 space-y-4">
+            
+            {/* Header Micro-Banner */}
+            <div className="bg-[#101014] border border-neutral-800 p-4 brutalist-shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono-tech text-[#D7FF36] font-bold tracking-widest uppercase">
+                  DIRECT TRANSMISSION CHANNEL
+                </span>
+                <span className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-400 text-[9px] font-mono-tech uppercase font-bold border border-emerald-500/30">
+                  AVAILABLE
+                </span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl font-archivo text-white leading-tight uppercase tracking-tight">
+                LET'S BUILD <span className="text-[#D7FF36]">WHAT'S NEXT</span>.
               </h2>
-            </div>
 
-            <p className="text-base sm:text-lg text-neutral-300 font-normal leading-relaxed max-w-xl">
-              Whether you are architecting a high-concurrency software product, seeking strategic advisory for state-scale technological initiatives, or launching a Web3 protocol — my inbox is open.
-            </p>
+              <p className="text-xs text-neutral-400 leading-relaxed font-normal">
+                Open for high-impact software architecture, full-stack sprints, and startup advisory.
+              </p>
 
-            {/* Direct Coordinates Box */}
-            <div className="border border-neutral-800 bg-neutral-900/90 p-6 space-y-4">
-              <div className="text-xs font-mono-tech text-neutral-400 uppercase tracking-widest pb-2 border-b border-neutral-800">
-                DIRECT ELECTRONIC MAIL
-              </div>
+              {/* Direct Email Pill Box */}
+              <div className="pt-2">
+                <div className="flex items-center justify-between gap-2 p-2 bg-[#0A0A0C] border border-neutral-700 text-xs font-mono-tech">
+                  <a
+                    href={`mailto:${PORTFOLIO_DATA.profile.email}`}
+                    onClick={() => sound.playClick()}
+                    className="font-bold text-neutral-200 hover:text-[#D7FF36] transition-colors truncate flex items-center gap-1.5"
+                    title={PORTFOLIO_DATA.profile.email}
+                  >
+                    <Mail className="w-3.5 h-3.5 text-[#304FFE] shrink-0" />
+                    <span className="truncate">{PORTFOLIO_DATA.profile.email}</span>
+                  </a>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <a
-                  href={`mailto:${PORTFOLIO_DATA.profile.email}`}
-                  onClick={() => sound.playClick()}
-                  className="text-lg sm:text-xl font-mono-tech font-bold text-white hover:text-[#D7FF36] transition-colors break-all"
-                >
-                  {PORTFOLIO_DATA.profile.email}
-                </a>
-
-                <button
-                  type="button"
-                  onClick={handleCopyEmail}
-                  className="px-3 py-1.5 border border-neutral-700 bg-neutral-800 hover:bg-[#304FFE] text-xs font-mono-tech font-bold uppercase transition-colors flex items-center gap-1.5 self-start sm:self-center"
-                >
-                  {copiedEmail ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-[#D7FF36]" />
-                      <span className="text-[#D7FF36]">COPIED</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5" />
-                      <span>COPY</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* Utility Badges */}
-              <div className="pt-3 border-t border-neutral-800 flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  onClick={handleDownloadVCard}
-                  className="text-xs font-mono-tech text-neutral-300 hover:text-white flex items-center gap-1.5 underline underline-offset-4"
-                >
-                  <Download className="w-3.5 h-3.5 text-[#D7FF36]" />
-                  <span>DOWNLOAD VCARD</span>
-                </button>
-
-                <a
-                  href="/Sujan_Ali_CV.pdf"
-                  download="Sujan_Ali_CV.pdf"
-                  onClick={() => sound.playPop()}
-                  className="text-xs font-mono-tech text-[#D7FF36] hover:underline flex items-center gap-1.5 font-bold"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>DOWNLOAD RESUME (PDF)</span>
-                </a>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    sound.playPop();
-                    onOpenResume();
-                  }}
-                  className="text-xs font-mono-tech text-neutral-300 hover:text-white flex items-center gap-1.5 underline underline-offset-4"
-                >
-                  <FileText className="w-3.5 h-3.5 text-[#304FFE]" />
-                  <span>VIEW CV MODAL</span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={handleCopyEmail}
+                    className="shrink-0 px-2.5 py-1 bg-neutral-800 hover:bg-[#304FFE] text-[10px] font-bold uppercase transition-colors flex items-center gap-1 border border-neutral-700 text-white"
+                  >
+                    {copiedEmail ? (
+                      <>
+                        <Check className="w-3 h-3 text-[#D7FF36]" />
+                        <span className="text-[#D7FF36]">COPIED</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        <span>COPY</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Social Channels Link Row */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Quick Engagement Topic Chips */}
+            <div className="bg-[#101014] border border-neutral-800 p-3.5 space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-mono-tech text-neutral-400 uppercase tracking-wider">
+                <span className="flex items-center gap-1 text-[#D7FF36] font-bold">
+                  <Zap className="w-3 h-3" />
+                  <span>ONE-CLICK ENGAGEMENT TOPICS</span>
+                </span>
+                <span className="text-neutral-500 text-[9px]">CLICK TO POPULATE</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-1.5">
+                {ENGAGEMENT_PRESETS.map((preset) => (
+                  <button
+                    key={preset.tag}
+                    type="button"
+                    onClick={() => handlePresetClick(preset.label)}
+                    className="p-2 text-left bg-[#0A0A0C] border border-neutral-800 hover:border-[#D7FF36] transition-colors group"
+                  >
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className="text-[10px] font-mono-tech font-bold text-white group-hover:text-[#D7FF36] transition-colors">
+                        {preset.label}
+                      </span>
+                      <span className="text-[8px] font-mono-tech text-neutral-500 group-hover:text-[#38BDF8]">
+                        [{preset.tag}]
+                      </span>
+                    </div>
+                    <p className="text-[9px] text-neutral-400 font-mono-tech truncate">
+                      {preset.desc}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Compact Social Channels Link Row */}
+            <div className="grid grid-cols-2 gap-2">
               <a
                 href={PORTFOLIO_DATA.profile.github}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => sound.playClick()}
-                className="p-4 border border-neutral-800 bg-neutral-900 hover:border-[#D7FF36] transition-colors flex items-center justify-between group"
+                className="px-3 py-2 border border-neutral-800 bg-[#101014] hover:border-[#D7FF36] transition-colors flex items-center justify-between group"
               >
-                <div className="flex items-center gap-3">
-                  <Github className="w-5 h-5 text-neutral-400 group-hover:text-white" />
-                  <span className="font-mono-tech text-xs font-bold uppercase">GITHUB</span>
+                <div className="flex items-center gap-2">
+                  <Github className="w-4 h-4 text-neutral-400 group-hover:text-white" />
+                  <span className="font-mono-tech text-[10px] font-bold uppercase">GITHUB</span>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-neutral-500 group-hover:text-[#D7FF36] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#D7FF36] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
 
               <a
@@ -185,45 +221,57 @@ export default function Contact({ onOpenResume }: ContactProps) {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => sound.playClick()}
-                className="p-4 border border-neutral-800 bg-neutral-900 hover:border-[#304FFE] transition-colors flex items-center justify-between group"
+                className="px-3 py-2 border border-neutral-800 bg-[#101014] hover:border-[#304FFE] transition-colors flex items-center justify-between group"
               >
-                <div className="flex items-center gap-3">
-                  <Linkedin className="w-5 h-5 text-neutral-400 group-hover:text-[#304FFE]" />
-                  <span className="font-mono-tech text-xs font-bold uppercase">LINKEDIN</span>
+                <div className="flex items-center gap-2">
+                  <Linkedin className="w-4 h-4 text-neutral-400 group-hover:text-[#38bdf8]" />
+                  <span className="font-mono-tech text-[10px] font-bold uppercase">LINKEDIN</span>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-neutral-500 group-hover:text-[#304FFE] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#38bdf8] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
             </div>
           </div>
 
-          {/* Right Column: High-Impact Direct Inquiry Form */}
-          <div className="lg:col-span-6 border-2 border-neutral-800 bg-[#161616] p-6 sm:p-8 md:p-10 brutalist-shadow-lime">
-            <div className="flex items-center justify-between pb-4 mb-6 border-b border-neutral-800 text-xs font-mono-tech">
-              <span className="text-[#D7FF36] font-bold uppercase">
-                DIRECT INQUIRY DISPATCH
+          {/* Right Column: Compact High-Tech Dispatch Console Form */}
+          <div className="lg:col-span-7 bg-[#101014] border border-neutral-800 p-4 sm:p-5 brutalist-shadow-lime">
+            
+            {/* Terminal Title Bar */}
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-neutral-800 text-[10px] font-mono-tech">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-rose-500/80" />
+                  <span className="w-2 h-2 rounded-full bg-amber-500/80" />
+                  <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
+                </div>
+                <span className="text-white font-bold ml-1.5 uppercase flex items-center gap-1">
+                  <Terminal className="w-3 h-3 text-[#D7FF36]" />
+                  <span>TRANSMISSION_TERMINAL // DISPATCH</span>
+                </span>
+              </div>
+              <span className="text-neutral-500 uppercase tracking-widest hidden sm:inline">
+                STATUS: IDLE_LISTENING
               </span>
-              <span className="text-neutral-400">ENCRYPTION: VERIFIED</span>
             </div>
 
             {submitted ? (
-              <div className="py-12 space-y-6 text-center">
-                <div className="w-16 h-16 border-2 border-[#D7FF36] bg-[#D7FF36]/10 text-[#D7FF36] mx-auto flex items-center justify-center">
-                  <Check className="w-8 h-8" />
+              <div className="py-8 space-y-4 text-center">
+                <div className="w-12 h-12 border-2 border-[#D7FF36] bg-[#D7FF36]/10 text-[#D7FF36] mx-auto flex items-center justify-center">
+                  <Check className="w-6 h-6" />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-2xl sm:text-3xl font-archivo uppercase text-white">
-                    TRANSMISSION LOGGED.
+                <div className="space-y-1">
+                  <h3 className="text-xl font-archivo uppercase text-white">
+                    TRANSMISSION DISPATCHED.
                   </h3>
-                  <p className="text-sm font-mono-tech text-neutral-300 max-w-sm mx-auto">
-                    Thank you, {formData.name}. Your inquiry has been cached and queued. You can also reach me directly at <span className="text-[#D7FF36]">{PORTFOLIO_DATA.profile.email}</span>.
+                  <p className="text-xs font-mono-tech text-neutral-300 max-w-sm mx-auto">
+                    Payload received, {formData.name}. Logged into queue. Direct inquiries can also be routed to <span className="text-[#D7FF36]">{PORTFOLIO_DATA.profile.email}</span>.
                   </p>
                 </div>
-                <div className="pt-4 flex justify-center gap-3">
+                <div className="pt-2 flex flex-wrap justify-center gap-2">
                   <a
                     href={`mailto:${PORTFOLIO_DATA.profile.email}?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(formData.message)}`}
-                    className="px-5 py-2.5 bg-[#D7FF36] text-[#111111] hover:bg-white font-mono-tech text-xs font-bold uppercase transition-colors"
+                    className="px-4 py-2 bg-[#D7FF36] text-black hover:bg-white font-mono-tech text-[10px] font-black uppercase transition-colors flex items-center gap-1.5"
                   >
-                    DISPATCH VIA DEFAULT EMAIL CLIENT →
+                    <span>OPEN IN CLIENT →</span>
                   </a>
                   <button
                     type="button"
@@ -231,90 +279,101 @@ export default function Contact({ onOpenResume }: ContactProps) {
                       setSubmitted(false);
                       setFormData({ name: '', email: '', subject: '', message: '' });
                     }}
-                    className="px-4 py-2.5 border border-neutral-700 text-neutral-300 hover:text-white font-mono-tech text-xs font-bold uppercase"
+                    className="px-3.5 py-2 border border-neutral-700 hover:border-white text-neutral-300 hover:text-white font-mono-tech text-[10px] font-bold uppercase flex items-center gap-1"
                   >
-                    NEW MESSAGE
+                    <RefreshCw className="w-3 h-3" />
+                    <span>NEW PAYLOAD</span>
                   </button>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Name Field */}
-                <div>
-                  <label htmlFor="contact-name" className="block text-xs font-mono-tech text-neutral-400 uppercase mb-1.5 font-bold">
-                    YOUR NAME / ORGANIZATION *
-                  </label>
-                  <input
-                    id="contact-name"
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Elena Rostova"
-                    className={`w-full px-4 py-3 bg-neutral-900 border text-white text-sm font-mono-tech focus:outline-none ${
-                      formErrors.name ? 'border-[#FF5733] ring-1 ring-[#FF5733]' : 'border-neutral-700 focus:border-[#D7FF36]'
-                    }`}
-                  />
-                  {formErrors.name && (
-                    <p className="mt-1 text-xs font-mono-tech text-[#FF5733]">
-                      {formErrors.name}
-                    </p>
-                  )}
-                </div>
+              <form onSubmit={handleSubmit} className="space-y-3.5">
+                
+                {/* 2-Column Compact Grid for Name & Email */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Name Field */}
+                  <div>
+                    <label htmlFor="contact-name" className="block text-[10px] font-mono-tech text-neutral-400 uppercase mb-1 font-bold">
+                      NAME / ENTITY *
+                    </label>
+                    <input
+                      id="contact-name"
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="e.g. Alex Morgan"
+                      className={`w-full px-3 py-2 bg-[#08080B] border text-white text-xs font-mono-tech focus:outline-none transition-colors ${
+                        formErrors.name ? 'border-[#FF5733] ring-1 ring-[#FF5733]' : 'border-neutral-800 focus:border-[#D7FF36]'
+                      }`}
+                    />
+                    {formErrors.name && (
+                      <p className="mt-1 text-[9px] font-mono-tech text-[#FF5733]">
+                        {formErrors.name}
+                      </p>
+                    )}
+                  </div>
 
-                {/* Email Field */}
-                <div>
-                  <label htmlFor="contact-email" className="block text-xs font-mono-tech text-neutral-400 uppercase mb-1.5 font-bold">
-                    ELECTRONIC MAIL ADDRESS *
-                  </label>
-                  <input
-                    id="contact-email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="e.g. elena@venture.com"
-                    className={`w-full px-4 py-3 bg-neutral-900 border text-white text-sm font-mono-tech focus:outline-none ${
-                      formErrors.email ? 'border-[#FF5733] ring-1 ring-[#FF5733]' : 'border-neutral-700 focus:border-[#D7FF36]'
-                    }`}
-                  />
-                  {formErrors.email && (
-                    <p className="mt-1 text-xs font-mono-tech text-[#FF5733]">
-                      {formErrors.email}
-                    </p>
-                  )}
+                  {/* Email Field */}
+                  <div>
+                    <label htmlFor="contact-email" className="block text-[10px] font-mono-tech text-neutral-400 uppercase mb-1 font-bold">
+                      ELECTRONIC MAIL *
+                    </label>
+                    <input
+                      id="contact-email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="e.g. alex@enterprise.com"
+                      className={`w-full px-3 py-2 bg-[#08080B] border text-white text-xs font-mono-tech focus:outline-none transition-colors ${
+                        formErrors.email ? 'border-[#FF5733] ring-1 ring-[#FF5733]' : 'border-neutral-800 focus:border-[#D7FF36]'
+                      }`}
+                    />
+                    {formErrors.email && (
+                      <p className="mt-1 text-[9px] font-mono-tech text-[#FF5733]">
+                        {formErrors.email}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Subject Field */}
                 <div>
-                  <label htmlFor="contact-subject" className="block text-xs font-mono-tech text-neutral-400 uppercase mb-1.5 font-bold">
+                  <label htmlFor="contact-subject" className="block text-[10px] font-mono-tech text-neutral-400 uppercase mb-1 font-bold">
                     SUBJECT / ENGAGEMENT TYPE
                   </label>
                   <input
                     id="contact-subject"
+                    name="subject"
                     type="text"
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    placeholder="e.g. Enterprise Full Stack Contract / Advisory"
-                    className="w-full px-4 py-3 bg-neutral-900 border border-neutral-700 text-white text-sm font-mono-tech focus:outline-none focus:border-[#D7FF36]"
+                    placeholder="e.g. [System Architecture] High-Concurrency Infrastructure"
+                    className="w-full px-3 py-2 bg-[#08080B] border border-neutral-800 text-white text-xs font-mono-tech focus:outline-none focus:border-[#D7FF36] transition-colors"
                   />
                 </div>
 
                 {/* Message Field */}
                 <div>
-                  <label htmlFor="contact-message" className="block text-xs font-mono-tech text-neutral-400 uppercase mb-1.5 font-bold">
-                    TRANSMISSION MESSAGE *
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label htmlFor="contact-message" className="text-[10px] font-mono-tech text-neutral-400 uppercase font-bold">
+                      TRANSMISSION PAYLOAD *
+                    </label>
+                    <span className="text-[9px] font-mono-tech text-neutral-500">
+                      {formData.message.length} CHARS
+                    </span>
+                  </div>
                   <textarea
                     id="contact-message"
-                    rows={4}
+                    rows={3}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Describe your initiative, architectural requirements, or timeline..."
-                    className={`w-full px-4 py-3 bg-neutral-900 border text-white text-sm font-mono-tech focus:outline-none ${
-                      formErrors.message ? 'border-[#FF5733] ring-1 ring-[#FF5733]' : 'border-neutral-700 focus:border-[#D7FF36]'
+                    placeholder="Provide scope, architectural requirements, expected timeline, or advisory goals..."
+                    className={`w-full px-3 py-2 bg-[#08080B] border text-white text-xs font-mono-tech focus:outline-none transition-colors resize-none ${
+                      formErrors.message ? 'border-[#FF5733] ring-1 ring-[#FF5733]' : 'border-neutral-800 focus:border-[#D7FF36]'
                     }`}
                   />
                   {formErrors.message && (
-                    <p className="mt-1 text-xs font-mono-tech text-[#FF5733]">
+                    <p className="mt-1 text-[9px] font-mono-tech text-[#FF5733]">
                       {formErrors.message}
                     </p>
                   )}
@@ -323,27 +382,30 @@ export default function Contact({ onOpenResume }: ContactProps) {
                 {/* Submit Action */}
                 <button
                   type="submit"
-                  className="w-full py-4 px-6 bg-[#D7FF36] text-[#111111] hover:bg-white hover:text-black font-archivo text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 brutalist-shadow-orange font-black"
+                  onMouseEnter={() => setIsHoveredSubmit(true)}
+                  onMouseLeave={() => setIsHoveredSubmit(false)}
+                  className="w-full py-2.5 px-4 bg-[#D7FF36] text-black hover:bg-white font-archivo text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 brutalist-shadow-sm font-black active:translate-x-0.5 active:translate-y-0.5"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>TRANSMIT INQUIRY NOW</span>
+                  <Send className={`w-3.5 h-3.5 transition-transform ${isHoveredSubmit ? 'translate-x-1 -translate-y-0.5' : ''}`} />
+                  <span>DISPATCH TRANSMISSION</span>
+                  <Sparkles className="w-3.5 h-3.5 text-black" />
                 </button>
               </form>
             )}
           </div>
         </div>
 
-        {/* Footer Editorial Sign-off */}
-        <div className="mt-20 pt-8 border-t border-neutral-800 flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-mono-tech text-neutral-500">
+        {/* Compact Footer Editorial Sign-off */}
+        <div className="mt-10 pt-4 border-t border-neutral-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono-tech text-neutral-400">
           <div>
-            © {new Date().getFullYear()} SUJAN ALI. ALL RIGHTS RESERVED.
+            © {new Date().getFullYear()} SUJAN ALI · ALL TRANSMISSIONS LOGGED
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <span>NEO-BRUTALIST ARCHITECTURE</span>
-            <span>·</span>
-            <span>SWISS EDITORIAL GRID</span>
-            <span>·</span>
-            <span>TRIPURA, INDIA</span>
+            <span className="text-neutral-700">·</span>
+            <span>23.83° N, 91.28° E</span>
+            <span className="text-neutral-700">·</span>
+            <span className="text-[#D7FF36] font-bold">TRIPURA, INDIA</span>
           </div>
         </div>
       </div>

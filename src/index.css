@@ -144,6 +144,58 @@
   animation-play-state: paused;
 }
 
+/* 3D Auto-Motion Keyframes for Leadership Matrix */
+@keyframes autoFloatCard {
+  0% {
+    transform: perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px) translateZ(6px);
+  }
+  25% {
+    transform: perspective(900px) rotateX(5deg) rotateY(-6deg) translateY(-5px) translateZ(14px);
+  }
+  50% {
+    transform: perspective(900px) rotateX(-4deg) rotateY(5deg) translateY(-2px) translateZ(10px);
+  }
+  75% {
+    transform: perspective(900px) rotateX(3deg) rotateY(6deg) translateY(-6px) translateZ(16px);
+  }
+  100% {
+    transform: perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px) translateZ(6px);
+  }
+}
+
+.animate-auto-float {
+  animation: autoFloatCard 7s ease-in-out infinite;
+}
+.animate-auto-float:hover {
+  animation-play-state: paused;
+}
+
+/* Equalizer and Cyber Scrubber animations */
+@keyframes eqBarPulse {
+  0%, 100% { height: 18%; }
+  50% { height: 95%; }
+}
+
+@keyframes laserScan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+@keyframes tapeScrollSlow {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-tape-scroll {
+  display: flex;
+  width: max-content;
+  animation: tapeScrollSlow 36s linear infinite;
+}
+
+.animate-tape-scroll:hover {
+  animation-play-state: paused;
+}
+
 /* Print Styles for formatted resume export */
 @media print {
   body {

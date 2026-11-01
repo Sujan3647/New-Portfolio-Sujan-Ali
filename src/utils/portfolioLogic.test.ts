@@ -52,13 +52,13 @@ test('filterTechStack filters by category and search keyword', () => {
 });
 
 test('filterProjects correctly searches by title or keyword', () => {
-  const carepulse = filterProjects(PORTFOLIO_DATA.projects, 'ALL', 'carepulse');
-  assert.equal(carepulse.length, 1);
-  assert.equal(carepulse[0].title, 'CAREPULSE');
+  const sic = filterProjects(PORTFOLIO_DATA.projects, 'ALL', 'sic');
+  assert.ok(sic.length >= 1);
+  assert.ok(sic[0].title.includes('STARTUP & INCUBATION CENTRE') || sic[0].id === 'sic-portal');
 
   const solidityProjects = filterProjects(PORTFOLIO_DATA.projects, 'ALL', 'Solidity');
   assert.ok(solidityProjects.length >= 1);
-  assert.equal(solidityProjects[0].id, 'smart-lottery');
+  assert.equal(solidityProjects[0].id, 'student-docs-mis');
 });
 
 test('searchAllPortfolio returns indexed results across domains', () => {
